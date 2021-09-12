@@ -2,7 +2,7 @@
 <div>
     <h1>Register Now!!!</h1>
 
-    <b-form class="container">
+    <b-form class="container" @submit="sendOtp">
         <b-form-group label="Phone No.:" description="We will not share your phone no. with anyone.">
             <b-form-input type="tel" v-model="form.phone" pattern="[0-9]{10}">
             </b-form-input>
@@ -21,7 +21,7 @@ export default {
     data(){
         return{
             form:{
-              phone: 9150435380,
+              phone: '',
               //res = null
             }
         }
@@ -29,11 +29,37 @@ export default {
 
     methods:{
         OnSubmit(){
-            this.form.phone = this.form.phone
+            this.$emit('phone_no', this.form.phone)
+        },
+
+        sendOtp(){
+            try{
+        const res = fetch('http://13.127.45.20:5001/sendOTP', {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                number: this.form.phone
+            }),
+        });
+
+        const data = res.json();
+
+        if(res.status === 202){
+            console.log(data.message);
+        }
+        else{
+            console.log(data.message);
+        }
+        }
+        catch(err){
+            console.warn(err);
+        }
         }
     },
 
-    async created(){
+    /* async created(){
         //e.preventDefault();
         try{
         const res = await fetch('http://13.127.45.20:5001/sendOTP', {
@@ -42,7 +68,7 @@ export default {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                number: this.form.phone
+                number: 9150435380
             }),
         });
 
@@ -60,7 +86,7 @@ export default {
         }
 
 
-    }
+    } */
 
     /* async created(){
         const config={
